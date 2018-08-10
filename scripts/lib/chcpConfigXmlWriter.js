@@ -79,10 +79,12 @@ function pathToIosConfigXml() {
  *
  * @return {String} absolute path to config.xml file
  */
-function pathToAndroidConfigXml() {
-  return path.join(projectRoot, 'platforms', 'android', 'res', 'xml', 'config.xml');
+function pathToAndroidConfigXml7() {
+  return path.join(projectRoot, 'platforms', 'android', 'app', 'src', 'main', 'res', 'xml', 'config.xml');
 }
-
+function pathToAndroidConfigXml() {
+    return path.join(projectRoot, 'platforms', 'android', 'res', 'xml', 'config.xml');
+}
 /**
  * Get path to platform-specific config.xml file.
  *
@@ -91,19 +93,15 @@ function pathToAndroidConfigXml() {
  */
 function getPlatformSpecificConfigXml(platform) {
   var configFilePath = null;
-  switch (platform) {
-    case 'ios':
-      {
-        configFilePath = pathToIosConfigXml();
-        break;
-      }
-    case 'android':
-      {
-        configFilePath = pathToAndroidConfigXml();
-        break;
+  if (platform === 'ios') {
+      configFilePath = pathToIosConfigXml();
+  }
+  if (platform === 'android') {
+      configFilePath = pathToAndroidConfigXml();
+      if(!configFilePath) {
+        configFilePath = pathToAndroidConfigXml7()
       }
   }
-
   return configFilePath;
 }
 

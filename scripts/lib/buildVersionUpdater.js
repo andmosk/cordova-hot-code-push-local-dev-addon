@@ -65,8 +65,11 @@ function increaseBuildVersionForAndroid(cordovaContext, buildConfig) {
     manifestFileContent = xmlHelper.readXmlAsJson(androidManifestFilePath);
 
   if (!manifestFileContent) {
-    logger.error('AndroidManifest.xml file is not found! Can\'t increase build version for android.');
-    return;
+      androidManifestFilePath = path.join(cordovaContext.opts.projectRoot, 'platforms', ANDROID_PLATFORM, 'AndroidManifest.xml');
+      if(!manifestFileContent) {
+          logger.error('AndroidManifest.xml file is not found! Can\'t increase build version for android.');
+          return;
+      }
   }
 
   var currentVersion = parseInt(manifestFileContent['manifest']['$']['android:versionCode']),
