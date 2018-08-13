@@ -7,6 +7,7 @@ var xmlHelper = require('./xmlHelper.js');
 var cordovaContext;
 var projectRoot;
 var platforms;
+var androidVersion;
 
 module.exports = {
   writeOptions: writeOptions
@@ -37,6 +38,7 @@ function setup(context) {
   cordovaContext = context;
   platforms = context.opts.platforms;
   projectRoot = context.opts.projectRoot;
+  androidVersion = context.cordova.platforms.android.version;
 }
 
 /**
@@ -83,7 +85,7 @@ function pathToAndroidConfigXml7() {
   return path.join(projectRoot, 'platforms', 'android', 'app', 'src', 'main', 'res', 'xml', 'config.xml');
 }
 function pathToAndroidConfigXml() {
-    return path.join(projectRoot, 'platforms', 'android', 'res', 'xml', 'config.xml');
+  return path.join(projectRoot, 'platforms', 'android', 'res', 'xml', 'config.xml');
 }
 /**
  * Get path to platform-specific config.xml file.
@@ -91,16 +93,13 @@ function pathToAndroidConfigXml() {
  * @param {String} platform - for what platform we need config.xml
  * @return {String} absolute path to config.xml
  */
-function getPlatformSpecificConfigXml(platform) {
+function getPlatformSpecificConfigXml(platform, androidVersion) {
   var configFilePath = null;
   if (platform === 'ios') {
-      configFilePath = pathToIosConfigXml();
+    configFilePath = pathToIosConfigXml();
   }
   if (platform === 'android') {
-      configFilePath = pathToAndroidConfigXml();
-      if(!configFilePath) {
-        configFilePath = pathToAndroidConfigXml7()
-      }
+    configFilePath = androidVersion === '~7.0.0' ? pathToAndroidConfigXml7() : pathToAndroidConfigXml();
   }
   return configFilePath;
 }
@@ -112,7 +111,7 @@ function getPlatformSpecificConfigXml(platform) {
  */
 function injectOptions(options) {
   platforms.forEach(function(platform) {
-    var configXmlFilePath = getPlatformSpecificConfigXml(platform);
+    var configXmlFilePath = getPlatformSpecificConfigXml(platform, androidVersion);
     if (configXmlFilePath == null) {
       return;
     }
